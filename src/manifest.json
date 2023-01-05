@@ -1,0 +1,15 @@
+
+{
+  "name": "test",
+  "version": "1.0",
+  "description": "11",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "index.html"
+  },
+  "permissions": [
+    "activeTab",
+    "webNavigation",
+    "scripting"
+  ]
+}
