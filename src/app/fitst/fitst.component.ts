@@ -54,46 +54,27 @@ export class FitstComponent implements OnInit,OnDestroy{
               let counter =0;
 
 
-
-
-              let observer = new MutationObserver((mutations,observer)=>{
-
-                let observer2 = new MutationObserver((mutations2,observer2222)=>{
-                  let innerHTML2 = (mutations[0].target.childNodes[0] as Element).innerHTML;
-                  if (innerHTML2 !=innerHTML) {
-                    Array.from(div!.children).forEach(c => c.remove())
-                    counter=0;
-                    observer.observe((pjsdiv as Node), config);
-                    observer2222.disconnect()
-                  }
-
-                })
-
-                counter++;
-                let innerHTML = (mutations[0].target.childNodes[0] as Element).innerHTML;
-                console.log(innerHTML)
-                let strings = innerHTML.split(' ')
-                strings.forEach(st=>{
-                  let innerDiv = document.createElement('div');
-                  if (div){
-                    innerDiv.innerText = st
-                    div.appendChild(innerDiv as Node)
-                  }
-                })
-
-
-                if (counter==1){
-                  observer2.observe((pjsdiv as Node), config);
-                  observer.disconnect();
-                }
-              })
-
               let elementById = document.getElementById('oframecdnplayer')!;
 
               let pjsdiv =  elementById.getElementsByTagName('pjsdiv').item(133)
 
+              let printed = true;
+              let oldValue="";
+              let observer = new MutationObserver((mutations,observer)=>{
 
+                let text = (mutations[0].target.childNodes[0] as Element).innerHTML
+                if (oldValue !=text){
+
+                  console.log(text)
+                  oldValue = (mutations[0].target.childNodes[0] as Element).innerHTML
+
+
+                }
+              })
               observer.observe((pjsdiv as Node), config);
+
+
+
 
 
 
