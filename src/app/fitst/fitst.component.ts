@@ -63,11 +63,19 @@ export class FitstComponent implements OnInit,OnDestroy{
               let observer = new MutationObserver((mutations,observer)=>{
 
                 let text = (mutations[0].target.childNodes[0] as Element).innerHTML
-                if (oldValue !=text){
-
-                  console.log(text)
-                  oldValue = (mutations[0].target.childNodes[0] as Element).innerHTML
-
+                if (text) {
+                  if (oldValue != text) {
+                    Array.from(div!.children).forEach(c => c.remove())
+                    text.split(" ").forEach(innerTxt => {
+                      let innerDiv = document.createElement('div');
+                      innerDiv.innerText = innerTxt
+                      div!.appendChild(innerDiv as Node)
+                    })
+                    console.log(text)
+                    oldValue = (mutations[0].target.childNodes[0] as Element).innerHTML
+                  }
+                }else {
+                  Array.from(div!.children).forEach(c => c.remove())
 
                 }
               })
