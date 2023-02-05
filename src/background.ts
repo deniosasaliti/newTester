@@ -78,6 +78,20 @@ chrome.action.onClicked.addListener(tab => {
             translate.innerHTML = "red";
 
 
+            const translate2 = require('google-translate-api');
+
+            translate2('Ik spreek Engels', {to: 'en'}).then((res:any) => {
+              console.log(res.text);
+              //=> I speak English
+              console.log(res.from.language.iso);
+              //=> nl
+            }).catch((err:any) => {
+              console.error(err);
+            });
+
+
+
+
             // const encodedParams = new URLSearchParams();
             // encodedParams.append("q", "Hello, world!");
             // encodedParams.append("target", "ru");
