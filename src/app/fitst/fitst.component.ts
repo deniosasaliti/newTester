@@ -23,6 +23,7 @@ export class FitstComponent implements OnInit,OnDestroy{
       if (tab) {
         chrome.scripting.executeScript(
           {
+
             target:{tabId: tab.id!},
             func:()=>{
               let map:any = []
