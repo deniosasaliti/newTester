@@ -46,7 +46,6 @@ chrome.action.onClicked.addListener(tab => {
 
 
             const config = {
-
               childList: true,
               attributes: true,
               characterData: true,
@@ -78,16 +77,16 @@ chrome.action.onClicked.addListener(tab => {
             translate.innerHTML = "red";
 
 
-            const translate2 = require('google-translate-api');
+            // const translate2 = require('google-translate-api');
 
-            translate2('Ik spreek Engels', {to: 'en'}).then((res:any) => {
-              console.log(res.text);
-              //=> I speak English
-              console.log(res.from.language.iso);
-              //=> nl
-            }).catch((err:any) => {
-              console.error(err);
-            });
+            // translate2('Ik spreek Engels', {to: 'en'}).then((res:any) => {
+            //   console.log(res.text);
+            //   //=> I speak English
+            //   console.log(res.from.language.iso);
+            //   //=> nl
+            // }).catch((err:any) => {
+            //   console.error(err);
+            // });
 
 
 
@@ -120,16 +119,85 @@ chrome.action.onClicked.addListener(tab => {
 
 
 
+            let player = document.getElementById('player');
+            let buttonElement = document.createElement('button');
 
+            buttonElement.style.width = '30px';
+            buttonElement.style.height = '30px';
+            buttonElement.style.left = '30px';
+            buttonElement.style.position = 'absolute';
+            buttonElement.style.backgroundColor = 'red';
+            buttonElement.style.zIndex = '999999';
+            player!.appendChild(buttonElement);
+            buttonElement.addEventListener('click',()=>{
+
+
+
+              document.body.style.width = '100%';
+              document.body.style.height = '100%';
+              let cdnplayer = document.getElementById('cdnplayer-container');
+              cdnplayer!.style.height = '100%'
+              let theatreDiv = document.createElement('div');
+              theatreDiv.style.width = '100%'
+              theatreDiv.style.height = '600px'
+              theatreDiv.style.flex = '100%'
+              // theatreDiv.style.justifyContent = 'space-between'
+              theatreDiv.style.backgroundColor = 'red'
+              theatreDiv.appendChild(cdnplayer!);
+              document.body.appendChild(theatreDiv!);
+              theatreDiv.tabIndex =1
+              theatreDiv.focus()
+              let listPjsdiv = document.getElementsByTagName('pjsdiv');
+              let cdnplayer2 = document.getElementById('cdnplayer');
+              cdnplayer2!.style.height = '100%';
+              let videoElement = document.getElementsByTagName('video')[0];
+
+
+              Array.from(listPjsdiv).forEach((e:any)=>{
+               let numb = parseInt(e.style.top);
+                if (numb > 300){
+                  e.style.top = numb + 300 + 'px';
+                }
+              });
+
+
+
+
+            })
             let elementById = document.getElementById('oframecdnplayer');
             elementById!.appendChild(sideBar);
 
 
             let pjsdiv =  elementById!.getElementsByTagName('pjsdiv').item(133)
 
+
+            // let observer2 = new MutationObserver((mutations,observer)=>{
+            //   mutations.forEach(muta=>{
+            //    let nodeww= muta.target;
+            //     if (nodeww.nodeName ==="PJSDIV"){
+            //       let nodeAsElement = (nodeww as HTMLElement);
+            //      let numberOfTop =  parseInt (nodeAsElement.style.top);
+            //      if (numberOfTop > 300){
+            //        nodeAsElement.style.top = '500px';
+            //        console.log(numberOfTop + ' numberOfTop')
+            //        console.log('QWEasdQWE')
+            //      }
+            //
+            //     }
+            //   });
+            //
+            //
+            //   let pjsdiv =  elementById!.getElementsByTagName('pjsdiv');
+            //   Array.from(pjsdiv).forEach((e:any)=>{
+            //
+            //   });
+            //
+            // });
+            // observer2.observe(document,config);
             let observer = new MutationObserver((mutations,observer)=>{
 
               mutations.forEach(muta=>{
+
                 if (muta.removedNodes.length===1 && muta.addedNodes.length===0){
                   Array.from(div!.children).forEach(c => c.remove())
                   console.log("REMOVE ")
@@ -140,7 +208,7 @@ chrome.action.onClicked.addListener(tab => {
                       let text = (innerNode as Element).innerHTML;
                       let block = document.createElement('div')
                       block.style.wordBreak = 'break-word'
-                      block.style.marginBottom = '5px'
+                      block.style.marginBottom = '25px'
                       block.style.background = 'rgba(0,0,0,0.7)';
 
                       text.split(" ").forEach(innerTxt => {
@@ -165,7 +233,7 @@ chrome.action.onClicked.addListener(tab => {
                     let text = (muta.addedNodes[0] as Element).innerHTML;
                     let block = document.createElement('div')
                     block.style.wordBreak = 'break-word'
-                    block.style.marginBottom = '5px'
+                    block.style.marginBottom = '25px'
                     block.style.background = 'rgba(0,0,0,0.7)';
                     text.split(" ").forEach(innerTxt => {
                       let innerDiv2 = document.createElement("a")
