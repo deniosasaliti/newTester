@@ -198,11 +198,15 @@ chrome.action.onClicked.addListener(tab => {
 
               mutations.forEach(muta=>{
 
-                if (muta.removedNodes.length===1 && muta.addedNodes.length===0){
+                if (muta.removedNodes.length===1 && muta.addedNodes.length===0 &&
+                  muta.removedNodes[0].nodeName ==="SPAN"){
+
                   Array.from(div!.children).forEach(c => c.remove())
                   console.log("REMOVE ")
 
-                }else if (muta.removedNodes.length===0 && muta.addedNodes.length===1){
+                }else if (muta.removedNodes.length===0 && muta.addedNodes.length===1 &&
+                  muta.addedNodes[0].nodeName ==="SPAN"){
+
                   muta.target.childNodes.forEach(innerNode=>{
                     if (innerNode.nodeName === "SPAN"){
                       let text = (innerNode as Element).innerHTML;
@@ -227,7 +231,9 @@ chrome.action.onClicked.addListener(tab => {
                       console.log(text)
                     }
                   })
-                }else if(muta.removedNodes.length===1 && muta.addedNodes.length===1) {
+                }else if(muta.removedNodes.length===1 && muta.addedNodes.length===1
+                          && muta.removedNodes[0].nodeName ==="SPAN"
+                          && muta.addedNodes[0].nodeName ==="SPAN") {
                   if ((muta.removedNodes[0] as Element).innerHTML !== (muta.addedNodes[0] as Element).innerHTML){
                     Array.from(div!.children).forEach(c => c.remove())
                     let text = (muta.addedNodes[0] as Element).innerHTML;
@@ -270,7 +276,7 @@ chrome.action.onClicked.addListener(tab => {
 /////////////////////////////////
 //
             })
-            observer.observe(pjsdiv!, config);
+            observer.observe(document, config);
 
           }
         }
