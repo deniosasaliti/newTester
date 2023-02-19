@@ -59,11 +59,11 @@ chrome.action.onClicked.addListener(tab => {
             sideBar.style.zIndex = '10000';
             sideBar.style.background = 'rgba(0,0,0,0.2)';
             sideBar.style.visibility = 'visible';
-            sideBar.style.right = '0px';
-            sideBar.style.position = 'absolute';
-            sideBar.style.width = '250px';
-            sideBar.style.height = '300px';
+            sideBar.style.width = '25%';
+            // sideBar.style.position = 'absolute';
+            sideBar.style.height = '100%';
             sideBar.style.overflowY = 'scroll';
+            sideBar.style.flexGrow  = '4';
 
 
 
@@ -129,6 +129,14 @@ chrome.action.onClicked.addListener(tab => {
             buttonElement.style.backgroundColor = 'red';
             buttonElement.style.zIndex = '999999';
             player!.appendChild(buttonElement);
+
+            let leftSideBar = document.createElement('div');
+            leftSideBar.style.backgroundColor = 'blue';
+            leftSideBar.style.height= '100%';
+            leftSideBar.style.width= '25%';
+            leftSideBar.style.flexGrow  = '3';
+
+
             buttonElement.addEventListener('click',()=>{
 
 
@@ -137,13 +145,17 @@ chrome.action.onClicked.addListener(tab => {
               document.body.style.height = '100%';
               let cdnplayer = document.getElementById('cdnplayer-container');
               cdnplayer!.style.height = '100%'
+              cdnplayer!.style.flexGrow = '3'
               let theatreDiv = document.createElement('div');
               theatreDiv.style.width = '100%'
+              theatreDiv.style.display = 'flex'
               theatreDiv.style.height = '600px'
-              theatreDiv.style.flex = '100%'
+              theatreDiv.style.alignContent = 'stretch'
               // theatreDiv.style.justifyContent = 'space-between'
               theatreDiv.style.backgroundColor = 'red'
+              theatreDiv.appendChild(leftSideBar);
               theatreDiv.appendChild(cdnplayer!);
+              theatreDiv.appendChild(sideBar);
               document.body.appendChild(theatreDiv!);
               theatreDiv.tabIndex =1
               theatreDiv.focus()
@@ -151,6 +163,7 @@ chrome.action.onClicked.addListener(tab => {
               let cdnplayer2 = document.getElementById('cdnplayer');
               cdnplayer2!.style.height = '100%';
               let videoElement = document.getElementsByTagName('video')[0];
+
 
 
               Array.from(listPjsdiv).forEach((e:any)=>{
@@ -165,7 +178,7 @@ chrome.action.onClicked.addListener(tab => {
 
             })
             let elementById = document.getElementById('oframecdnplayer');
-            elementById!.appendChild(sideBar);
+            // elementById!.appendChild(sideBar);
 
 
             let pjsdiv =  elementById!.getElementsByTagName('pjsdiv').item(133)
@@ -197,6 +210,22 @@ chrome.action.onClicked.addListener(tab => {
             let observer = new MutationObserver((mutations,observer)=>{
 
               mutations.forEach(muta=>{
+
+                let nodeww= muta.target;
+                if (nodeww.nodeName ==="PJSDIV"){
+                  let nodeAsElement = (nodeww as HTMLElement);
+                  let numberOfTop =  parseInt (nodeAsElement.style.top);
+                  if (numberOfTop > 300){
+                    nodeAsElement.style.top = '500px';
+                    console.log(numberOfTop + ' numberOfTop')
+                    console.log('QWEasdQWE')
+                  }
+
+                }
+
+
+
+
 
                 if (muta.removedNodes.length===1 && muta.addedNodes.length===0 &&
                   muta.removedNodes[0].nodeName ==="SPAN"){
