@@ -169,7 +169,7 @@ chrome.action.onClicked.addListener(tab => {
               theatreDiv.style.height = '570px'
               theatreDiv.style.alignContent = 'stretch'
               // theatreDiv.style.justifyContent = 'space-between'
-              theatreDiv.style.backgroundColor = 'red'
+              theatreDiv.style.backgroundColor = 'black'
               theatreDiv.appendChild(leftSideBar);
               theatreDiv.appendChild(cdnplayer!);
               theatreDiv.appendChild(sideBar);
@@ -279,7 +279,8 @@ chrome.action.onClicked.addListener(tab => {
                       innerFlexWrap.style.flexWrap = 'wrap';
                       translateText.appendChild(innerFlexWrap);
                       block.appendChild(translateText)
-
+                      text = text.replace("<br>"," ");
+                      text = text.replace(/[^,?a-zA-Z ]/g, '')
 
                       translateButton.addEventListener('click',()=>{
                         englishTextArea.innerText = text
@@ -294,8 +295,7 @@ chrome.action.onClicked.addListener(tab => {
                       block.style.marginBottom = '25px'
                       block.style.background = 'rgba(0,0,0,0.7)';
 
-                     text = text.replace("<br>"," ");
-                      text = text.replace(/[^.,?a-zA-Z ]/g, '')
+
                       text.split(" ").forEach(innerTxt => {
                         let innerDiv2 = document.createElement("a")
                         let innerDiv = document.createElement('a');
@@ -345,7 +345,8 @@ chrome.action.onClicked.addListener(tab => {
                     innerFlexWrap.style.flexWrap = 'wrap';
                     translateText.appendChild(innerFlexWrap);
                     block.appendChild(translateText)
-
+                    text = text.replace("<br>"," ");
+                    text = text.replace(/[^,?a-zA-Z ]/g, '')
 
                     translateButton.addEventListener('click',()=>{
                       englishTextArea.innerText = text
@@ -358,8 +359,7 @@ chrome.action.onClicked.addListener(tab => {
                     block.style.wordBreak = 'break-word'
                     block.style.marginBottom = '25px'
                     block.style.background = 'rgba(0,0,0,0.7)';
-                    text = text.replace("<br>"," ");
-                    text = text.replace(/[^.,?a-zA-Z ]/g, '')
+
                     text.split(" ").forEach(innerTxt => {
                       let innerDiv2 = document.createElement("a")
                       let innerDiv = document.createElement('a');
