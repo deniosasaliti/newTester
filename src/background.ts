@@ -88,29 +88,31 @@ chrome.action.onClicked.addListener(tab => {
             //   console.error(err);
             // });
 
+           function  translateFunc(text:string){
+
+             const options = {
+               method: 'POST',
+               headers: {
+                 'content-type': 'application/json',
+                 'X-RapidAPI-Key': '2a7953aad3msh15ec642006a5884p11e6c8jsne8218a6d95ac',
+                 'X-RapidAPI-Host': 'rapid-translate-multi-traduction.p.rapidapi.com'
+               },
+               body: JSON.stringify({
+                 from: "en",
+                 to: "ru",
+                 e: "",
+                 q:text
+               })
 
 
+             };
 
-            // const encodedParams = new URLSearchParams();
-            // encodedParams.append("q", "Hello, world!");
-            // encodedParams.append("target", "ru");
-            // encodedParams.append("source", "en");
-            //
-            // const options = {
-            //     method: 'POST',
-            //     headers: {
-            //         'content-type': 'application/x-www-form-urlencoded',
-            //         'Accept-Encoding': 'application/gzip',
-            //         'X-RapidAPI-Key': '2a7953aad3msh15ec642006a5884p11e6c8jsne8218a6d95ac',
-            //         'X-RapidAPI-Host': 'google-translate1.p.rapidapi.com'
-            //     },
-            //     body: encodedParams
-            // };
-            //
-            // fetch('https://google-translate1.p.rapidapi.com/language/translate/v2', options)
-            //     .then(response => response.json())
-            //     .then(response => console.log(response))
-            //     .catch(err => console.error(err));
+           return   fetch('https://rapid-translate-multi-traduction.p.rapidapi.com/t', options)
+               .then(response => response.json())
+               // .then(response => console.log(response))
+               // .catch(err => console.error(err));
+           }
+
 
 
 
@@ -130,26 +132,41 @@ chrome.action.onClicked.addListener(tab => {
             buttonElement.style.zIndex = '999999';
             player!.appendChild(buttonElement);
 
+            let englishTextArea = document.createElement('textarea');
+            englishTextArea.style.width = '100%';
+            englishTextArea.style.height = '20%';
+
+            let russTextArea = document.createElement('textarea');
+            russTextArea.style.width = '100%';
+            russTextArea.style.height = '20%';
             let leftSideBar = document.createElement('div');
             leftSideBar.style.backgroundColor = 'blue';
             leftSideBar.style.height= '100%';
             leftSideBar.style.width= '25%';
             leftSideBar.style.flexGrow  = '3';
+            leftSideBar.appendChild(englishTextArea)
+            leftSideBar.appendChild(russTextArea)
 
 
             buttonElement.addEventListener('click',()=>{
 
 
 
-              document.body.style.width = '100%';
-              document.body.style.height = '100%';
+              // document.body.style.width = '100%';
+              // document.body.style.height = '100%';
               let cdnplayer = document.getElementById('cdnplayer-container');
+
+              let listPjsdiv = document.getElementsByTagName('pjsdiv');
+              let cdnplayer2 = document.getElementById('cdnplayer');
+              cdnplayer2!.style.height = '100%';
+              cdnplayer2!.style.width = '100%';
               cdnplayer!.style.height = '100%'
               cdnplayer!.style.flexGrow = '3'
               let theatreDiv = document.createElement('div');
+              theatreDiv.style.marginTop = '40px'
               theatreDiv.style.width = '100%'
               theatreDiv.style.display = 'flex'
-              theatreDiv.style.height = '600px'
+              theatreDiv.style.height = '570px'
               theatreDiv.style.alignContent = 'stretch'
               // theatreDiv.style.justifyContent = 'space-between'
               theatreDiv.style.backgroundColor = 'red'
@@ -159,9 +176,6 @@ chrome.action.onClicked.addListener(tab => {
               document.body.appendChild(theatreDiv!);
               theatreDiv.tabIndex =1
               theatreDiv.focus()
-              let listPjsdiv = document.getElementsByTagName('pjsdiv');
-              let cdnplayer2 = document.getElementById('cdnplayer');
-              cdnplayer2!.style.height = '100%';
               let videoElement = document.getElementsByTagName('video')[0];
 
 
@@ -240,9 +254,46 @@ chrome.action.onClicked.addListener(tab => {
                     if (innerNode.nodeName === "SPAN"){
                       let text = (innerNode as Element).innerHTML;
                       let block = document.createElement('div')
+                      block.style.display = 'flex';
+                      let translateButton = document.createElement('button');
+                      let buttonInlineBlock = document.createElement('div');
+                      buttonInlineBlock.style.display = 'inline-block'
+                      buttonInlineBlock.style.width = '15%'
+                      let wrapForButton= document.createElement('div');
+                      wrapForButton.style.display = 'flex';
+                      wrapForButton.style.flexDirection = 'column';
+                      wrapForButton.style.width = '100%';
+                      wrapForButton.style.height = '100%';
+                      wrapForButton.style.justifyContent = 'center';
+                      buttonInlineBlock.appendChild(wrapForButton)
+                      // translateButton.style.height = '10px'
+                      translateButton.style.height = '25px'
+                      translateButton.style.width = '90%'
+                      wrapForButton.appendChild(translateButton)
+                      block.appendChild(buttonInlineBlock);
+                      let translateText = document.createElement('div')
+                      translateText.style.display = 'inline-block';
+                      translateText.style.width = '85%';
+                      let innerFlexWrap = document.createElement('div');
+                      innerFlexWrap.style.display = 'flex';
+                      innerFlexWrap.style.flexWrap = 'wrap';
+                      translateText.appendChild(innerFlexWrap);
+                      block.appendChild(translateText)
+
+
+                      translateButton.addEventListener('click',()=>{
+                        englishTextArea.innerText = text
+                        translateFunc(text).then(data=>{
+                          russTextArea.innerText = data[0]
+                          }
+                        )
+                      })
+
+
                       block.style.wordBreak = 'break-word'
                       block.style.marginBottom = '25px'
                       block.style.background = 'rgba(0,0,0,0.7)';
+
 
                       text.split(" ").forEach(innerTxt => {
                         let innerDiv2 = document.createElement("a")
@@ -252,7 +303,7 @@ chrome.action.onClicked.addListener(tab => {
                         innerDiv.style.marginRight = "10px"
                         innerDiv2.style.marginRight = "5px"
                         div!.appendChild(innerDiv)
-                        block.appendChild(innerDiv2)
+                        translateText.appendChild(innerDiv2)
                       })
                       sideBar.appendChild(block)
                       sideBar.scrollTop = sideBar.scrollHeight
@@ -266,10 +317,23 @@ chrome.action.onClicked.addListener(tab => {
                   if ((muta.removedNodes[0] as Element).innerHTML !== (muta.addedNodes[0] as Element).innerHTML){
                     Array.from(div!.children).forEach(c => c.remove())
                     let text = (muta.addedNodes[0] as Element).innerHTML;
-                    let block = document.createElement('div')
+                    let block = document.createElement('div');
+                    let translateButton = document.createElement('button');
+                    translateButton.style.height = '100%'
+                    translateButton.style.marginRight ='2px'
+                    translateButton.style.display = 'inline-block'
+                    translateButton.addEventListener('click',()=>{
+                      englishTextArea.innerText = text
+                      translateFunc(text).then(data=>{
+                          russTextArea.innerText = data[0]
+                        }
+                      )
+                    })
+
                     block.style.wordBreak = 'break-word'
                     block.style.marginBottom = '25px'
                     block.style.background = 'rgba(0,0,0,0.7)';
+                    block.appendChild(translateButton);
                     text.split(" ").forEach(innerTxt => {
                       let innerDiv2 = document.createElement("a")
                       let innerDiv = document.createElement('a');
