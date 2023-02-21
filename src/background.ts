@@ -317,11 +317,35 @@ chrome.action.onClicked.addListener(tab => {
                   if ((muta.removedNodes[0] as Element).innerHTML !== (muta.addedNodes[0] as Element).innerHTML){
                     Array.from(div!.children).forEach(c => c.remove())
                     let text = (muta.addedNodes[0] as Element).innerHTML;
-                    let block = document.createElement('div');
+
+                    let block = document.createElement('div')
+                    block.style.display = 'flex';
                     let translateButton = document.createElement('button');
-                    translateButton.style.height = '100%'
-                    translateButton.style.marginRight ='2px'
-                    translateButton.style.display = 'inline-block'
+                    let buttonInlineBlock = document.createElement('div');
+                    buttonInlineBlock.style.display = 'inline-block'
+                    buttonInlineBlock.style.width = '15%'
+                    let wrapForButton= document.createElement('div');
+                    wrapForButton.style.display = 'flex';
+                    wrapForButton.style.flexDirection = 'column';
+                    wrapForButton.style.width = '100%';
+                    wrapForButton.style.height = '100%';
+                    wrapForButton.style.justifyContent = 'center';
+                    buttonInlineBlock.appendChild(wrapForButton)
+                    // translateButton.style.height = '10px'
+                    translateButton.style.height = '25px'
+                    translateButton.style.width = '90%'
+                    wrapForButton.appendChild(translateButton)
+                    block.appendChild(buttonInlineBlock);
+                    let translateText = document.createElement('div')
+                    translateText.style.display = 'inline-block';
+                    translateText.style.width = '85%';
+                    let innerFlexWrap = document.createElement('div');
+                    innerFlexWrap.style.display = 'flex';
+                    innerFlexWrap.style.flexWrap = 'wrap';
+                    translateText.appendChild(innerFlexWrap);
+                    block.appendChild(translateText)
+
+
                     translateButton.addEventListener('click',()=>{
                       englishTextArea.innerText = text
                       translateFunc(text).then(data=>{
@@ -333,7 +357,7 @@ chrome.action.onClicked.addListener(tab => {
                     block.style.wordBreak = 'break-word'
                     block.style.marginBottom = '25px'
                     block.style.background = 'rgba(0,0,0,0.7)';
-                    block.appendChild(translateButton);
+
                     text.split(" ").forEach(innerTxt => {
                       let innerDiv2 = document.createElement("a")
                       let innerDiv = document.createElement('a');
@@ -342,7 +366,7 @@ chrome.action.onClicked.addListener(tab => {
                       innerDiv.style.marginRight = "10px"
                       innerDiv2.style.marginRight = "5px"
                       div!.appendChild(innerDiv)
-                      block.appendChild(innerDiv2)
+                      translateText.appendChild(innerDiv2)
 
                     })
                     sideBar.appendChild(block)
