@@ -59,11 +59,10 @@ chrome.action.onClicked.addListener(tab => {
             sideBar.style.zIndex = '10000';
             sideBar.style.background = 'rgba(0,0,0,0.2)';
             sideBar.style.visibility = 'visible';
-            sideBar.style.width = '25%';
-            // sideBar.style.position = 'absolute';
+            sideBar.style.width = '0px';
             sideBar.style.height = '100%';
             sideBar.style.overflowY = 'scroll';
-            sideBar.style.flexGrow  = '4';
+            sideBar.style.flex  = '0 0 300px';
 
 
 
@@ -142,8 +141,8 @@ chrome.action.onClicked.addListener(tab => {
             let leftSideBar = document.createElement('div');
             leftSideBar.style.backgroundColor = 'blue';
             leftSideBar.style.height= '100%';
-            leftSideBar.style.width= '25%';
-            leftSideBar.style.flexGrow  = '3';
+            leftSideBar.style.width= '0px';
+            leftSideBar.style.flex  = '0 0 300px';
             leftSideBar.appendChild(englishTextArea)
             leftSideBar.appendChild(russTextArea)
 
@@ -154,7 +153,58 @@ chrome.action.onClicked.addListener(tab => {
 
               // document.body.style.width = '100%';
               // document.body.style.height = '100%';
+              let hideRightSideBarButton = document.createElement('div');
+              let hideLeftSideBarButton = document.createElement('div');
+              hideRightSideBarButton.style.position = 'absolute';
+              hideLeftSideBarButton.style.position = 'absolute';
+              hideRightSideBarButton.style.right = '20px';
+              hideLeftSideBarButton.style.left = '20px';
+              hideRightSideBarButton.style.top = '50%';
+              hideLeftSideBarButton.style.top = '50%';
+              hideRightSideBarButton.style.width = '20px';
+              hideLeftSideBarButton.style.width = '20px';
+              hideRightSideBarButton.style.height = '20px';
+              hideLeftSideBarButton.style.height = '20px';
+              hideRightSideBarButton.style.backgroundColor = 'red';
+              hideLeftSideBarButton.style.backgroundColor = 'red';
+              hideRightSideBarButton.style.visibility = 'hidden';
+              hideLeftSideBarButton.style.visibility = 'hidden';
               let cdnplayer = document.getElementById('cdnplayer-container');
+              cdnplayer!.addEventListener('mouseover',()=>{
+                hideRightSideBarButton.style.visibility = 'visible';
+                hideLeftSideBarButton.style.visibility = 'visible';
+              })
+
+              cdnplayer!.addEventListener('mouseleave',()=>{
+                hideRightSideBarButton.style.visibility = 'hidden';
+                hideLeftSideBarButton.style.visibility = 'hidden';
+              })
+              let leftOpen = true;
+              let rightOpen = true;
+              hideRightSideBarButton.addEventListener("click", ()=>{
+                if (rightOpen) {
+                  sideBar.style.flex = '0 0 0px'
+                  rightOpen = false
+                }
+                else {
+                  sideBar.style.flex = '0 0 300px'
+                  rightOpen = true
+                }
+
+              })
+              hideLeftSideBarButton.addEventListener("click", ()=>{
+                if (leftOpen) {
+                  leftSideBar.style.flex = '0 0 0px'
+                  leftOpen = false
+                }
+                else {
+                  leftSideBar.style.flex = '0 0 300px'
+                  leftOpen = true
+                }
+              })
+              hideLeftSideBarButton.style.visibility = 'visible';
+              cdnplayer!.appendChild(hideLeftSideBarButton);
+              cdnplayer!.appendChild(hideRightSideBarButton);
 
               let listPjsdiv = document.getElementsByTagName('pjsdiv');
               let cdnplayer2 = document.getElementById('cdnplayer');
@@ -192,35 +242,11 @@ chrome.action.onClicked.addListener(tab => {
 
             })
             let elementById = document.getElementById('oframecdnplayer');
-            // elementById!.appendChild(sideBar);
 
 
-            let pjsdiv =  elementById!.getElementsByTagName('pjsdiv').item(133)
 
 
-            // let observer2 = new MutationObserver((mutations,observer)=>{
-            //   mutations.forEach(muta=>{
-            //    let nodeww= muta.target;
-            //     if (nodeww.nodeName ==="PJSDIV"){
-            //       let nodeAsElement = (nodeww as HTMLElement);
-            //      let numberOfTop =  parseInt (nodeAsElement.style.top);
-            //      if (numberOfTop > 300){
-            //        nodeAsElement.style.top = '500px';
-            //        console.log(numberOfTop + ' numberOfTop')
-            //        console.log('QWEasdQWE')
-            //      }
-            //
-            //     }
-            //   });
-            //
-            //
-            //   let pjsdiv =  elementById!.getElementsByTagName('pjsdiv');
-            //   Array.from(pjsdiv).forEach((e:any)=>{
-            //
-            //   });
-            //
-            // });
-            // observer2.observe(document,config);
+
             let observer = new MutationObserver((mutations,observer)=>{
 
               mutations.forEach(muta=>{
