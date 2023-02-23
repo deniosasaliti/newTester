@@ -15,7 +15,11 @@ chrome.action.onClicked.addListener(tab => {
         {
           target:{tabId: tab.id!},
           func:()=>{
-
+            // let element = document.createElement("link");
+            // element.setAttribute("rel", "stylesheet");
+            // element.setAttribute("type", "text/css");
+            // element.setAttribute("href", "/tester/styles.css");
+            // document.getElementsByTagName("head")[0].appendChild(element);
 
 
             console.log("www")
@@ -34,7 +38,7 @@ chrome.action.onClicked.addListener(tab => {
               div.style.left = '10%';
               div.style.top = '10%';
               div.style.position = 'absolute';
-              div.style.width = '200px';
+              div.style.width = '600px';
               div.style.scrollSnapType = 'y mandatory';
 
 
@@ -324,13 +328,40 @@ chrome.action.onClicked.addListener(tab => {
 
                       text.split(" ").forEach(innerTxt => {
                         let innerDiv2 = document.createElement("a")
-                        let innerDiv = document.createElement('a');
+                        let innerDiv = document.createElement('div');
+
+
+
+
                         innerDiv.innerText = innerTxt
                         innerDiv2.innerText = innerTxt
                         innerDiv.style.marginRight = "10px"
                         innerDiv2.style.marginRight = "5px"
                         div!.appendChild(innerDiv)
                         translateText.appendChild(innerDiv2)
+
+                        innerDiv.classList.add('popup')
+                        let innerSpan = document.createElement('div');
+                        innerSpan.innerHTML = "qweqwe"
+                        innerSpan.classList.add('popuptext')
+
+                        innerDiv.appendChild(innerSpan);
+                        innerDiv.addEventListener('click',()=>{
+
+                          translateFunc(innerTxt).then(data=>{
+                            innerSpan.innerHTML = data[0];
+                            innerSpan.style.visibility = 'visible'
+                            innerSpan.classList.add("show")
+                            console.log("SHOW")
+                          })
+                        })
+
+                        innerDiv.addEventListener('mouseleave',()=>{
+                          innerSpan.style.visibility = 'hidden'
+                          console.log("SHOW")
+                        })
+
+
                       })
                       sideBar.appendChild(block)
                       sideBar.scrollTop = sideBar.scrollHeight
@@ -388,13 +419,38 @@ chrome.action.onClicked.addListener(tab => {
 
                     text.split(" ").forEach(innerTxt => {
                       let innerDiv2 = document.createElement("a")
-                      let innerDiv = document.createElement('a');
+                      let innerDiv = document.createElement('div');
+
+
+
                       innerDiv.innerText = innerTxt
                       innerDiv2.innerText = innerTxt
                       innerDiv.style.marginRight = "10px"
                       innerDiv2.style.marginRight = "5px"
                       div!.appendChild(innerDiv)
                       translateText.appendChild(innerDiv2)
+
+                      innerDiv.classList.add('popup')
+                      let innerSpan = document.createElement('div');
+                      // innerSpan.innerHTML = "qweqwe"
+                      innerSpan.classList.add('popuptext')
+
+                      innerDiv.appendChild(innerSpan);
+                      innerDiv.addEventListener('click',()=>{
+
+                         translateFunc(innerTxt).then(data=>{
+                           innerSpan.innerHTML = data[0];
+                           innerSpan.style.visibility = 'visible'
+                           innerSpan.classList.add("show")
+                           console.log("SHOW")
+                         })
+                      })
+                      innerDiv.addEventListener('mouseleave',()=>{
+                        innerSpan.style.visibility = 'hidden'
+                        console.log("SHOW")
+                      })
+
+
 
                     })
                     sideBar.appendChild(block)
