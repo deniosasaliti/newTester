@@ -236,8 +236,13 @@ chrome.action.onClicked.addListener(tab => {
 
               Array.from(listPjsdiv).forEach((e:any)=>{
                let numb = parseInt(e.style.top);
-                if (numb > 300){
-                  e.style.top = numb + 300 + 'px';
+                if (numb > 313){
+
+                  e.style.top = 'unset';
+                  e.style.bottom = '10%';
+
+                }else if (numb === 313 ){
+                  e.style.visibility = 'hidden';
                 }
               });
 
@@ -245,7 +250,11 @@ chrome.action.onClicked.addListener(tab => {
 
 
             })
-            let elementById = document.getElementById('oframecdnplayer');
+            let oframecdnplayer = document.getElementById('oframecdnplayer');
+
+
+
+
 
 
 
@@ -259,10 +268,14 @@ chrome.action.onClicked.addListener(tab => {
                 if (nodeww.nodeName ==="PJSDIV"){
                   let nodeAsElement = (nodeww as HTMLElement);
                   let numberOfTop =  parseInt (nodeAsElement.style.top);
-                  if (numberOfTop > 300){
-                    nodeAsElement.style.top = '500px';
+                  if (numberOfTop > 313){
+
+                    nodeAsElement.style.top = 'unset';
+                    nodeAsElement.style.bottom = '10%';
                     console.log(numberOfTop + ' numberOfTop')
                     console.log('QWEasdQWE')
+                  }else if (numberOfTop === 313 ){
+                    nodeAsElement.style.visibility = 'hidden';
                   }
 
                 }
@@ -279,6 +292,8 @@ chrome.action.onClicked.addListener(tab => {
 
                 }else if (muta.removedNodes.length===0 && muta.addedNodes.length===1 &&
                   muta.addedNodes[0].nodeName ==="SPAN"){
+
+                  (muta.target as HTMLElement).style.visibility = 'hidden'
 
                   muta.target.childNodes.forEach(innerNode=>{
                     if (innerNode.nodeName === "SPAN"){
@@ -342,7 +357,6 @@ chrome.action.onClicked.addListener(tab => {
 
                         innerDiv.classList.add('popup')
                         let innerSpan = document.createElement('div');
-                        innerSpan.innerHTML = "qweqwe"
                         innerSpan.classList.add('popuptext')
 
                         innerDiv.appendChild(innerSpan);
@@ -432,7 +446,7 @@ chrome.action.onClicked.addListener(tab => {
 
                       innerDiv.classList.add('popup')
                       let innerSpan = document.createElement('div');
-                      // innerSpan.innerHTML = "qweqwe"
+
                       innerSpan.classList.add('popuptext')
 
                       innerDiv.appendChild(innerSpan);
