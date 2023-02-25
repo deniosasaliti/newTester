@@ -43,7 +43,7 @@ chrome.action.onClicked.addListener(tab => {
 
 
 
-              (document.getElementById('oframecdnplayer'))!.appendChild(div!)
+              // (document.getElementById('oframecdnplayer'))!.appendChild(div!)
 
             }
 
@@ -136,12 +136,13 @@ chrome.action.onClicked.addListener(tab => {
             player!.appendChild(buttonElement);
 
             let englishTextArea = document.createElement('textarea');
-            englishTextArea.style.width = '100%';
+            englishTextArea.style.width = '98%';
             englishTextArea.style.height = '20%';
-
+            englishTextArea.style.resize = 'none';
             let russTextArea = document.createElement('textarea');
-            russTextArea.style.width = '100%';
+            russTextArea.style.width = '98%';
             russTextArea.style.height = '20%';
+            russTextArea.style.resize = 'none';
             let leftSideBar = document.createElement('div');
             leftSideBar.style.backgroundColor = 'blue';
             leftSideBar.style.height= '100%';
@@ -159,6 +160,8 @@ chrome.action.onClicked.addListener(tab => {
               // document.body.style.height = '100%';
               let hideRightSideBarButton = document.createElement('div');
               let hideLeftSideBarButton = document.createElement('div');
+              hideRightSideBarButton.style.zIndex = '10';
+              hideLeftSideBarButton.style.zIndex = '10';
               hideRightSideBarButton.style.position = 'absolute';
               hideLeftSideBarButton.style.position = 'absolute';
               hideRightSideBarButton.style.right = '20px';
@@ -173,13 +176,14 @@ chrome.action.onClicked.addListener(tab => {
               hideLeftSideBarButton.style.backgroundColor = 'red';
               hideRightSideBarButton.style.visibility = 'hidden';
               hideLeftSideBarButton.style.visibility = 'hidden';
-              let cdnplayer = document.getElementById('cdnplayer-container');
-              cdnplayer!.addEventListener('mouseover',()=>{
+              // let cdnplayer = document.getElementById('cdnplayer-container');
+              let videoWrapper = document.createElement('div');
+              videoWrapper!.addEventListener('mouseover',()=>{
                 hideRightSideBarButton.style.visibility = 'visible';
                 hideLeftSideBarButton.style.visibility = 'visible';
               })
 
-              cdnplayer!.addEventListener('mouseleave',()=>{
+              videoWrapper!.addEventListener('mouseleave',()=>{
                 hideRightSideBarButton.style.visibility = 'hidden';
                 hideLeftSideBarButton.style.visibility = 'hidden';
               })
@@ -207,15 +211,19 @@ chrome.action.onClicked.addListener(tab => {
                 }
               })
               hideLeftSideBarButton.style.visibility = 'visible';
-              cdnplayer!.appendChild(hideLeftSideBarButton);
-              cdnplayer!.appendChild(hideRightSideBarButton);
-
-              let listPjsdiv = document.getElementsByTagName('pjsdiv');
+              videoWrapper!.appendChild(hideLeftSideBarButton);
+              videoWrapper!.appendChild(hideRightSideBarButton);
+              videoWrapper.appendChild(div!);
+              videoWrapper.style.position = 'relative'
+              videoWrapper.style.flex = '10 0 640px'
+              let videoElement = document.getElementsByTagName('video')[0];
+              videoElement.controls = true;
+              videoWrapper.appendChild(videoElement);
               let cdnplayer2 = document.getElementById('cdnplayer');
               cdnplayer2!.style.height = '100%';
               cdnplayer2!.style.width = '100%';
-              cdnplayer!.style.height = '100%'
-              cdnplayer!.style.flexGrow = '3'
+              videoWrapper!.style.height = '100%'
+              videoWrapper!.style.flexGrow = '3'
               let theatreDiv = document.createElement('div');
               theatreDiv.style.marginTop = '40px'
               theatreDiv.style.width = '100%'
@@ -225,26 +233,25 @@ chrome.action.onClicked.addListener(tab => {
               // theatreDiv.style.justifyContent = 'space-between'
               theatreDiv.style.backgroundColor = 'black'
               theatreDiv.appendChild(leftSideBar);
-              theatreDiv.appendChild(cdnplayer!);
+              theatreDiv.appendChild(videoWrapper);
               theatreDiv.appendChild(sideBar);
               document.body.appendChild(theatreDiv!);
               theatreDiv.tabIndex =1
               theatreDiv.focus()
-              let videoElement = document.getElementsByTagName('video')[0];
 
 
 
-              Array.from(listPjsdiv).forEach((e:any)=>{
-               let numb = parseInt(e.style.top);
-                if (numb > 313){
-
-                  e.style.top = 'unset';
-                  e.style.bottom = '10%';
-
-                }else if (numb === 313 ){
-                  e.style.visibility = 'hidden';
-                }
-              });
+              // Array.from(listPjsdiv).forEach((e:any)=>{
+              //  let numb = parseInt(e.style.top);
+              //   if (numb > 313){
+              //
+              //     e.style.visibility = 'hidden';
+              //     // e.style.bottom = '10%';
+              //
+              //   }else if (numb === 313 ){
+              //     e.style.visibility = 'hidden';
+              //   }
+              // });
 
 
 
