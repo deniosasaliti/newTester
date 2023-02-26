@@ -183,6 +183,9 @@ chrome.action.onClicked.addListener(tab => {
                 hideLeftSideBarButton.style.visibility = 'visible';
               })
 
+
+
+
               videoWrapper!.addEventListener('mouseleave',()=>{
                 hideRightSideBarButton.style.visibility = 'hidden';
                 hideLeftSideBarButton.style.visibility = 'hidden';
@@ -217,8 +220,59 @@ chrome.action.onClicked.addListener(tab => {
               videoWrapper.style.position = 'relative'
               videoWrapper.style.flex = '10 0 640px'
               let videoElement = document.getElementsByTagName('video')[0];
-              videoElement.controls = true;
+              videoElement.controls = false;
               videoWrapper.appendChild(videoElement);
+              /////////////////////////////////////////////////////////////////////////////
+              let customControls = document.createElement('div');
+              customControls.id = 'video-controls';
+              customControls.style.display = 'flex';
+              customControls.style.width = '100%';
+              customControls.style.height = '70px';
+              customControls.style.backgroundColor = 'red';
+              customControls.style.position = 'relative';
+              customControls.style.bottom = '10%';
+              videoWrapper.appendChild(customControls);
+
+
+              let playStopButton = document.createElement('button');
+              playStopButton.style.flex = '1 0 70px'
+              playStopButton.style.width = '50px'
+              playStopButton.style.height = '50px'
+              playStopButton.style.backgroundColor = 'radial-gradient( rgba(255, 0, 128, 0.8) 60%, rgba(255, 255, 255, 1) 62%)'
+              playStopButton.style.borderRadius = '50%'
+              playStopButton.style.position = 'relative'
+              playStopButton.style.display = 'block'
+              playStopButton.style.margin = '100px auto'
+              playStopButton.style.boxShadow = '0px 0px 25px 3px rgba(255, 0, 128, 0.8)'
+
+              customControls.appendChild(playStopButton);
+
+
+              let seekBar = document.createElement('input')
+              seekBar.type = 'range';
+              seekBar.id = 'seek-bar';
+              seekBar.style.flex = '10 0 50%';
+              seekBar.value = '0';
+              seekBar.min = '0';
+              seekBar.max = '100';
+              customControls.appendChild(seekBar);
+
+
+              let muteButton = document.createElement('button');
+              muteButton.id = 'mute';
+              muteButton.style.flex = '1 0 10px';
+              muteButton.style.backgroundColor = 'red'
+              customControls.appendChild(muteButton);
+
+
+
+
+
+
+
+
+              /////////////////////////////////////////////////////////////////////////////
+
               let cdnplayer2 = document.getElementById('cdnplayer');
               cdnplayer2!.style.height = '100%';
               cdnplayer2!.style.width = '100%';
