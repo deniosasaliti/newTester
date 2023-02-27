@@ -227,24 +227,18 @@ chrome.action.onClicked.addListener(tab => {
               customControls.id = 'video-controls';
               customControls.style.display = 'flex';
               customControls.style.width = '100%';
-              customControls.style.height = '70px';
+              customControls.style.height = '50px';
               customControls.style.backgroundColor = 'red';
-              customControls.style.position = 'relative';
+              customControls.style.position = 'absolute';
               customControls.style.bottom = '10%';
               videoWrapper.appendChild(customControls);
 
 
               let playStopButton = document.createElement('button');
-              playStopButton.style.flex = '1 0 70px'
-              playStopButton.style.width = '50px'
-              playStopButton.style.height = '50px'
-              playStopButton.style.backgroundColor = 'radial-gradient( rgba(255, 0, 128, 0.8) 60%, rgba(255, 255, 255, 1) 62%)'
-              playStopButton.style.borderRadius = '50%'
-              playStopButton.style.position = 'relative'
-              playStopButton.style.display = 'block'
-              playStopButton.style.margin = '100px auto'
-              playStopButton.style.boxShadow = '0px 0px 25px 3px rgba(255, 0, 128, 0.8)'
-
+              playStopButton.style.flex = '1 0 50px'
+              playStopButton.classList.add('btn btn-outline-success my-2 my-sm-0')
+              let innerGlyphicon = document.createElement('i');
+              innerGlyphicon.classList.add('fas fa-play')
               customControls.appendChild(playStopButton);
 
 

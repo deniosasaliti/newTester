@@ -54,13 +54,12 @@
 
 
 .play-btn {
-  width: 100px;
-  height: 100px;
+  width: 50px;
+  height: 50px;
   background: radial-gradient( rgba(255, 0, 128, 0.8) 60%, rgba(255, 255, 255, 1) 62%);
   border-radius: 50%;
   position: relative;
   display: block;
-  margin: 10px auto;
   box-shadow: 0px 0px 25px 3px rgba(255, 0, 128, 0.8);
 }
 
@@ -93,8 +92,8 @@
   animation-delay: 0s;
   -webkit-animation: pulsate1 2s;
   animation: pulsate1 2s;
-  -webkit-animation-direction: normal;
-  animation-direction: normal;
+  -webkit-animation-direction: alternate;
+  animation-direction: alternate;
   -webkit-animation-iteration-count: infinite;
   animation-iteration-count: infinite;
   -webkit-animation-timing-function: step-start;
@@ -138,3 +137,20 @@
 
   }
 }
+.button-play {
+
+  box-sizing: border-box;
+  height: 50px;
+
+  border-color: transparent transparent transparent #202020;
+  transition: 100ms all ease;
+  will-change: border-width;
+  cursor: pointer;
+
+
+  border-style: solid;
+  border-width: 37px 0 37px 60px;
+}
+
+
+
