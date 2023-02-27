@@ -219,9 +219,9 @@ chrome.action.onClicked.addListener(tab => {
               videoWrapper.appendChild(div!);
               videoWrapper.style.position = 'relative'
               videoWrapper.style.flex = '10 0 640px'
-              let videoElement = document.getElementsByTagName('video')[0];
-              videoElement.controls = false;
-              videoWrapper.appendChild(videoElement);
+              let video = document.getElementsByTagName('video')[0];
+              video.controls = false;
+              videoWrapper.appendChild(video);
               /////////////////////////////////////////////////////////////////////////////
               let customControls = document.createElement('div');
               customControls.id = 'video-controls';
@@ -236,27 +236,244 @@ chrome.action.onClicked.addListener(tab => {
 
               let playStopButton = document.createElement('button');
               playStopButton.style.flex = '1 0 50px'
-              playStopButton.classList.add('btn btn-outline-success my-2 my-sm-0')
+              playStopButton.classList.add('btn-outline-success')
               let innerGlyphicon = document.createElement('i');
-              innerGlyphicon.classList.add('fas fa-play')
+              innerGlyphicon.classList.add('fas')
+              innerGlyphicon.classList.add('fa-play')
               customControls.appendChild(playStopButton);
+              playStopButton.appendChild(innerGlyphicon);
 
 
-              let seekBar = document.createElement('input')
-              seekBar.type = 'range';
-              seekBar.id = 'seek-bar';
-              seekBar.style.flex = '10 0 50%';
-              seekBar.value = '0';
-              seekBar.min = '0';
-              seekBar.max = '100';
-              customControls.appendChild(seekBar);
+              let slider = document.createElement('input')
+              slider.type = 'range';
+              slider.id = 'seek-bar';
+              slider.style.flex = '10 0 50%';
+              slider.value = '0';
+              slider.min = '0';
+              slider.max = '100';
+              customControls.appendChild(slider);
+
+              let sliderValue:any = slider.value
+
+              //add mute button
+              let mute_button = document.createElement('button');
+              mute_button.id = 'mute';
+              mute_button.style.flex = '1 0 10px';
+              mute_button.style.backgroundColor = 'red'
+              customControls.appendChild(mute_button);
 
 
-              let muteButton = document.createElement('button');
-              muteButton.id = 'mute';
-              muteButton.style.flex = '1 0 10px';
-              muteButton.style.backgroundColor = 'red'
-              customControls.appendChild(muteButton);
+              //add volume seek-bar
+              let volumeWrapper = document.createElement('div');
+              let volume_bar = document.createElement('input');
+              volume_bar.type = 'range';
+              volume_bar.min = '0';
+              volume_bar.max = '1';
+              volume_bar.step = '0.01';
+              volume_bar.value = '0.5';
+              volumeWrapper.appendChild(volume_bar);
+              customControls.appendChild(volumeWrapper);
+
+
+
+
+
+              let volumeBarValue:any = volume_bar.value
+
+
+
+
+
+
+
+
+              let  fullscreen = document.createElement('button');
+              fullscreen.classList.add('btn-outline-success');
+              fullscreen.innerHTML = '<i  class="fa fa-expand"></i>';
+              customControls.appendChild(fullscreen);
+
+
+              function makeFullscreen() {
+
+
+
+                if (!document.fullscreenElement) {
+
+                  videoWrapper.requestFullscreen();
+
+                  fullscreen.innerHTML = '<i class="fa fa-compress"></i>';
+                } else {
+                  if (document.exitFullscreen) {
+                    video.controls = false
+                    fullscreen.innerHTML ='<i  class="fa fa-expand"></i>';
+                    document.exitFullscreen();
+                  }
+                }
+              }
+
+              fullscreen.addEventListener('click',()=>makeFullscreen())
+
+
+              function play_or_pause() {
+                if (video.paused){
+                  video.play();
+                  playStopButton.innerHTML = '<i class="fas fa-play"></i>'
+                }else {
+                  video.pause();
+                  playStopButton.innerHTML = '<i  class="fas fa-play"></i>'
+                }
+              }
+
+              video.addEventListener('click',()=>play_or_pause())
+
+              video.addEventListener('dblclick',()=>makeFullscreen())
+
+
+              let min:any = slider.min
+
+              let max:any = slider.max
+
+
+
+              let max_volume:any = volume_bar.max
+
+              let min_volume:any = volume_bar.min
+              let is_change_scrolled:boolean;
+
+              volumeBarValue = volume_bar.value
+              volumeWrapper.style.background =`linear-gradient(to right, white ${(volumeBarValue-min_volume)/(max_volume-min_volume)*100}%, gray ${(volumeBarValue-min_volume)/(max_volume-min_volume)*100}%)`
+
+
+
+
+
+
+              volume_bar.addEventListener('input',()=>{
+                volumeBarValue = volume_bar.value
+
+                video.volume = volumeBarValue
+
+                volumeWrapper.style.background =`linear-gradient(to right, white ${(volumeBarValue-min_volume)/(max_volume-min_volume)*100}%, gray ${(volumeBarValue-min_volume)/(max_volume-min_volume)*100}%)`
+
+
+
+                volumeBarValue = volume_bar.value
+                if (volumeBarValue === 0){
+
+                  mute_button.innerHTML = '<i class="fa fa-volume-mute"></i>'
+
+                  video.volume = 0;
+
+                  video.muted = true;
+                  is_change_scrolled = true;
+
+
+                }else {
+                  volumeBarValue = volume_bar.value
+                  if (volumeBarValue < 0.5){
+
+                    mute_button.innerHTML = '<i class="fa fa-volume-down"></i>'
+                  } else {
+
+                    mute_button.innerHTML = '<i class="fa fa-volume-up"></i>';
+
+
+                  }
+                }
+
+              })
+
+
+
+
+              sliderValue = slider.value
+              slider.style.background = `linear-gradient(to right, #202020 ${(sliderValue-min)/(max-min)*100}%,gray ${(sliderValue-min)/(max-min)*100}%)`
+
+              slider.addEventListener('input',()=>{
+                sliderValue = slider.value
+                video.currentTime = video.duration * (sliderValue / 100);
+                sliderValue = slider.value
+                slider.style.background = `linear-gradient(to right, #202020 ${(sliderValue-min)/(max-min)*100}%,gray ${(sliderValue-min)/(max-min)*100}%)`
+              })
+
+              mute_button.addEventListener('click',()=>{
+
+
+                if (video.muted){
+
+                  video.muted = false;
+
+                  mute_button.innerHTML = '<i class="fa fa-volume-up"></i>'
+                  volumeBarValue = volume_bar.value
+                  volumeWrapper.style.background =`linear-gradient(to right, white ${(volumeBarValue-min_volume)/(max_volume-min_volume)*100}%, gray ${(volumeBarValue-min_volume)/(max_volume-min_volume)*100}%)`
+                  if (is_change_scrolled){
+                    is_change_scrolled = false;
+
+                    video.volume=0.5
+
+                    volumeBarValue = 0.5
+                    volumeBarValue = volume_bar.value
+                    volumeWrapper.style.background =`linear-gradient(to right, white ${(volumeBarValue-min_volume)/(max_volume-min_volume)*100}%, gray ${(volumeBarValue-min_volume)/(max_volume-min_volume)*100}%)`
+                  }
+                  else {
+                    volumeBarValue = volume_bar.value
+                    volumeWrapper.style.background =`linear-gradient(to right, white ${(volumeBarValue-min_volume)/(max_volume-min_volume)*100}%, gray ${(volumeBarValue-min_volume)/(max_volume-min_volume)*100}%)`
+                  }
+                }else {
+
+
+                  video.muted = true;
+
+                  mute_button.innerHTML = '<i class="fa fa-volume-mute"></i>'
+
+                  volumeWrapper.style.background ='grey';
+                }
+              })
+
+              video.addEventListener('timeupdate',()=>{
+
+                slider.style.background = `linear-gradient(to right, #202020 ${Math.round((video.currentTime * 100)/video.duration)}%,gray ${Math.round((video.currentTime * 100)/video.duration)}%)`
+
+                console.log(Math.round((video.currentTime * 100)/video.duration))
+              })
+
+
+              slider.addEventListener('change',()=>{
+                sliderValue = slider.value
+                video.currentTime = video.duration * (sliderValue / 100);
+              })
+
+              slider.addEventListener('input',()=>{
+                sliderValue = slider.value
+                video.currentTime = video.duration * (sliderValue / 100);
+
+              })
+
+
+
+
+
+              customControls.hidden = false
+
+
+              playStopButton.addEventListener('click',()=>play_or_pause());
+
+              videoWrapper.addEventListener('mouseout',()=>{
+
+                customControls.hidden = !video.paused;
+              })
+
+              videoWrapper.addEventListener("mouseover", ()=>{
+
+                customControls.hidden = false;
+              })
+
+
+
+
+
+
+
 
 
 
