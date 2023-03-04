@@ -140,6 +140,8 @@ chrome.action.onClicked.addListener(tab => {
             englishTextArea.style.height = '20%';
             englishTextArea.style.resize = 'none';
             let russTextArea = document.createElement('textarea');
+
+
             russTextArea.style.width = '98%';
             russTextArea.style.height = '20%';
             russTextArea.style.resize = 'none';
@@ -150,6 +152,14 @@ chrome.action.onClicked.addListener(tab => {
             leftSideBar.style.flex  = '0 0 300px';
             leftSideBar.appendChild(englishTextArea)
             leftSideBar.appendChild(russTextArea)
+
+
+
+
+
+
+
+
 
 
             buttonElement.addEventListener('click',()=>{
@@ -221,6 +231,12 @@ chrome.action.onClicked.addListener(tab => {
               videoWrapper.style.flex = '10 0 640px'
               let video = document.getElementsByTagName('video')[0];
               video.controls = false;
+
+
+
+
+
+
               videoWrapper.appendChild(video);
               /////////////////////////////////////////////////////////////////////////////
               let customControls = document.createElement('div');
@@ -230,7 +246,7 @@ chrome.action.onClicked.addListener(tab => {
               customControls.style.height = '50px';
               customControls.style.backgroundColor = 'red';
               customControls.style.position = 'absolute';
-              customControls.style.bottom = '10%';
+              customControls.style.bottom = '0';
               videoWrapper.appendChild(customControls);
 
 
@@ -250,6 +266,7 @@ chrome.action.onClicked.addListener(tab => {
               slider.style.flex = '10 0 50%';
               slider.value = '0';
               slider.min = '0';
+              slider.step = '0.01';
               slider.max = '100';
               customControls.appendChild(slider);
 
@@ -258,7 +275,8 @@ chrome.action.onClicked.addListener(tab => {
               //add mute button
               let mute_button = document.createElement('button');
               mute_button.id = 'mute';
-              mute_button.style.flex = '1 0 10px';
+              mute_button.style.flex = '1 0 35px';
+              mute_button.innerHTML = '<i class="fa fa-volume-up"></i>'
               mute_button.style.backgroundColor = 'red'
               customControls.appendChild(mute_button);
 
@@ -266,6 +284,7 @@ chrome.action.onClicked.addListener(tab => {
               //add volume seek-bar
               let volumeWrapper = document.createElement('div');
               let volume_bar = document.createElement('input');
+              volume_bar.id = 'volume-bar';
               volume_bar.type = 'range';
               volume_bar.min = '0';
               volume_bar.max = '1';
@@ -273,12 +292,9 @@ chrome.action.onClicked.addListener(tab => {
               volume_bar.value = '0.5';
               volumeWrapper.appendChild(volume_bar);
               customControls.appendChild(volumeWrapper);
-
-
-
-
-
               let volumeBarValue:any = volume_bar.value
+
+
 
 
 
@@ -327,6 +343,63 @@ chrome.action.onClicked.addListener(tab => {
               video.addEventListener('click',()=>play_or_pause())
 
               video.addEventListener('dblclick',()=>makeFullscreen())
+
+              let timerId:any;
+              videoWrapper.addEventListener("mousemove",function(){
+                if (!video.paused) {
+                  videoWrapper.style.cursor = 'default'
+                  customControls.style.visibility = 'visible'
+                  clearTimeout(timerId);
+                  timerId = setTimeout(function () {
+                    videoWrapper.style.cursor = 'none'
+                    customControls.style.visibility = 'hidden'
+                  }, 5000);
+                }else {
+                  clearTimeout(timerId);
+                  videoWrapper.style.cursor = 'default'
+                  customControls.style.visibility = 'visible'
+                }
+              });
+
+              videoWrapper.addEventListener("click",function(){
+                if (!video.paused) {
+                  videoWrapper.style.cursor = 'default'
+                  customControls.style.visibility = 'visible'
+                  clearTimeout(timerId);
+                  timerId = setTimeout(function () {
+                    videoWrapper.style.cursor = 'none'
+                    customControls.style.visibility = 'hidden'
+                  }, 5000);
+                }else {
+                  clearTimeout(timerId);
+                  videoWrapper.style.cursor = 'default'
+                  customControls.style.visibility = 'visible'
+                }
+              });
+
+
+              document.addEventListener('keypress',(e)=>{
+                if ( (e || window.event).keyCode === 32 /* enter key */ ) {
+
+                  video.paused ? video.play() : video.pause();
+                  if (!video.paused) {
+                    videoWrapper.style.cursor = 'default'
+                    customControls.style.visibility = 'visible'
+                    clearTimeout(timerId);
+                    timerId = setTimeout(function () {
+                      videoWrapper.style.cursor = 'none'
+                      customControls.style.visibility = 'hidden'
+                    }, 5000);
+                  }else {
+                    clearTimeout(timerId);
+                    videoWrapper.style.cursor = 'default'
+                    customControls.style.visibility = 'visible'
+                  }
+
+
+                }
+              })
+
 
 
               let min:any = slider.min
@@ -506,23 +579,13 @@ chrome.action.onClicked.addListener(tab => {
 
 
 
-              // Array.from(listPjsdiv).forEach((e:any)=>{
-              //  let numb = parseInt(e.style.top);
-              //   if (numb > 313){
-              //
-              //     e.style.visibility = 'hidden';
-              //     // e.style.bottom = '10%';
-              //
-              //   }else if (numb === 313 ){
-              //     e.style.visibility = 'hidden';
-              //   }
-              // });
+
 
 
 
 
             })
-            let oframecdnplayer = document.getElementById('oframecdnplayer');
+
 
 
 
@@ -597,10 +660,12 @@ chrome.action.onClicked.addListener(tab => {
                       translateText.appendChild(innerFlexWrap);
                       block.appendChild(translateText)
                       text = text.replace("<br>"," ");
-                      text = text.replace(/[^,?a-zA-Z ]/g, '')
+                      text = text.replace(/[^,.?a-zA-Z0-9' ]/g, '')
 
                       translateButton.addEventListener('click',()=>{
                         englishTextArea.innerText = text
+                        text = text.replace('? ','?')
+                        text = text.replace('. ','.')
                         translateFunc(text).then(data=>{
                           russTextArea.innerText = data[0]
                           }
@@ -689,10 +754,12 @@ chrome.action.onClicked.addListener(tab => {
                     translateText.appendChild(innerFlexWrap);
                     block.appendChild(translateText)
                     text = text.replace("<br>"," ");
-                    text = text.replace(/[^,?a-zA-Z ]/g, '')
+                    text = text.replace(/[^,.?a-zA-Z0-9' ]/g, '')
 
                     translateButton.addEventListener('click',()=>{
                       englishTextArea.innerText = text
+                      text = text.replace('? ','?')
+                      text = text.replace('. ','.')
                       translateFunc(text).then(data=>{
                           russTextArea.innerText = data[0]
                         }
