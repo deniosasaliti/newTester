@@ -266,8 +266,8 @@ chrome.action.onClicked.addListener(tab => {
               slider.style.flex = '10 0 50%';
               slider.value = '0';
               slider.min = '0';
-              slider.step = '0.01';
-              slider.max = '100';
+              slider.step = '1';
+              slider.max = video.duration+"";
               customControls.appendChild(slider);
 
               let sliderValue:any = slider.value
@@ -277,7 +277,7 @@ chrome.action.onClicked.addListener(tab => {
               mute_button.id = 'mute';
               mute_button.style.flex = '1 0 35px';
               mute_button.innerHTML = '<i class="fa fa-volume-up"></i>'
-              mute_button.style.backgroundColor = 'red'
+              mute_button.classList.add('btn-outline-success')
               customControls.appendChild(mute_button);
 
 
@@ -464,9 +464,9 @@ chrome.action.onClicked.addListener(tab => {
 
               slider.addEventListener('input',()=>{
                 sliderValue = slider.value
-                video.currentTime = video.duration * (sliderValue / 100);
+                // video.currentTime = video.duration * (sliderValue / 100);
                 sliderValue = slider.value
-                slider.style.background = `linear-gradient(to right, #202020 ${(sliderValue-min)/(max-min)*100}%,gray ${(sliderValue-min)/(max-min)*100}%)`
+                slider.style.background = `linear-gradient(to right, #202020 ${video.currentTime/video.duration*100}%,gray ${video.currentTime/video.duration*100}%)`
               })
 
               mute_button.addEventListener('click',()=>{
@@ -505,21 +505,23 @@ chrome.action.onClicked.addListener(tab => {
 
               video.addEventListener('timeupdate',()=>{
 
-                slider.style.background = `linear-gradient(to right, #202020 ${Math.round((video.currentTime * 100)/video.duration)}%,gray ${Math.round((video.currentTime * 100)/video.duration)}%)`
+                // slider.style.background = `linear-gradient(to right, #202020 ${Math.round((video.currentTime * 100)/video.duration)}%,gray ${Math.round((video.currentTime * 100)/video.duration)}%)`
+                slider.style.background = `linear-gradient(to right, #202020 ${video.currentTime/video.duration*100}%,gray ${video.currentTime/video.duration*100}%)`
 
-                console.log(Math.round((video.currentTime * 100)/video.duration))
+                console.log(video.currentTime/video.duration*100)
               })
 
 
               slider.addEventListener('change',()=>{
                 sliderValue = slider.value
-                video.currentTime = video.duration * (sliderValue / 100);
+                // video.currentTime = video.duration * (sliderValue / 100);
+                video.currentTime = sliderValue;
               })
 
               slider.addEventListener('input',()=>{
                 sliderValue = slider.value
-                video.currentTime = video.duration * (sliderValue / 100);
-
+                // video.currentTime = video.duration * (sliderValue / 100);
+                video.currentTime = sliderValue;
               })
 
 
