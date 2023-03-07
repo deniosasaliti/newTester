@@ -246,7 +246,7 @@ chrome.action.onClicked.addListener(tab => {
               customControls.style.display = 'flex';
               customControls.style.width = '100%';
               customControls.style.height = '50px';
-              customControls.style.backgroundColor = 'red';
+              customControls.style.backgroundColor = 'black';
               customControls.style.position = 'absolute';
               customControls.style.bottom = '0';
               videoWrapper.appendChild(customControls);
@@ -288,16 +288,17 @@ chrome.action.onClicked.addListener(tab => {
               volumeWrapper.style.display = 'flex';
               volumeWrapper.style.flexDirection = 'column';
               volumeWrapper.style.justifyContent = 'center';
+              volumeWrapper.style.margin = '0 10px 0 10px';
 
               let flexUp = document.createElement('div');
               let flexDown = document.createElement('div');
-              flexUp.style.flex = '1 0 20px';
+              flexUp.style.flex = '1 0 35%';
               flexUp.style.background = 'black';
-              flexDown.style.flex = '1 0 20px';
+              flexDown.style.flex = '1 0 35%';
               flexDown.style.background = 'black';
 
               let volume_bar = document.createElement('input');
-              volume_bar.style.flex = '1 0 20px';
+              volume_bar.style.flex = '1 0 30%';
               volume_bar.id = 'volume-bar';
               volume_bar.type = 'range';
               volume_bar.min = '0';
@@ -305,6 +306,7 @@ chrome.action.onClicked.addListener(tab => {
               volume_bar.step = '0.01';
               volume_bar.value = '0.5';
               volume_bar.style.background = ' url(chrome-extension://iabjjjhkjbhdohmogknobdammnlpfahp/images/kk6.png) center center no-repeat';
+              volume_bar.style.width = '80px'
 
 
               volumeWrapper.appendChild(flexUp);
