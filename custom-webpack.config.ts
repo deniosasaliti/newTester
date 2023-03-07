@@ -1,6 +1,12 @@
 import type { Configuration } from 'webpack';
 
+
+
 module.exports = {
+
+
+
+
   entry: { background: {
     import: [
       'src/background.ts'
@@ -10,3 +16,5 @@ module.exports = {
     } },
 
 } as Configuration;
+
+

@@ -20,6 +20,10 @@
       ]
     }
   ],
+  "web_accessible_resources": [{
+    "resources": ["/images/kk6.png"],
+    "matches": ["<all_urls>"]
+  }],
   "background": {
     "service_worker": "background.js",
     "type": "module"

@@ -25,6 +25,8 @@ chrome.action.onClicked.addListener(tab => {
             console.log("www")
             alert("SSSSSSS")
 
+            // let volume_bar = document.getElementById("volume-bar");
+            // volume_bar!.style.background =`url(${chrome.runtime.getURL("kk6.png")} center center no-repeat)`
 
 
             let div=document.getElementById("qwe")
@@ -283,14 +285,31 @@ chrome.action.onClicked.addListener(tab => {
 
               //add volume seek-bar
               let volumeWrapper = document.createElement('div');
+              volumeWrapper.style.display = 'flex';
+              volumeWrapper.style.flexDirection = 'column';
+              volumeWrapper.style.justifyContent = 'center';
+
+              let flexUp = document.createElement('div');
+              let flexDown = document.createElement('div');
+              flexUp.style.flex = '1 0 20px';
+              flexUp.style.background = 'black';
+              flexDown.style.flex = '1 0 20px';
+              flexDown.style.background = 'black';
+
               let volume_bar = document.createElement('input');
+              volume_bar.style.flex = '1 0 20px';
               volume_bar.id = 'volume-bar';
               volume_bar.type = 'range';
               volume_bar.min = '0';
               volume_bar.max = '1';
               volume_bar.step = '0.01';
               volume_bar.value = '0.5';
+              volume_bar.style.background = ' url(chrome-extension://iabjjjhkjbhdohmogknobdammnlpfahp/images/kk6.png) center center no-repeat';
+
+
+              volumeWrapper.appendChild(flexUp);
               volumeWrapper.appendChild(volume_bar);
+              volumeWrapper.appendChild(flexDown);
               customControls.appendChild(volumeWrapper);
               let volumeBarValue:any = volume_bar.value
 
@@ -333,7 +352,7 @@ chrome.action.onClicked.addListener(tab => {
               function play_or_pause() {
                 if (video.paused){
                   video.play();
-                  playStopButton.innerHTML = '<i class="fas fa-play"></i>'
+                  playStopButton.innerHTML = '<i class="fas fa-pause"></i>'
                 }else {
                   video.pause();
                   playStopButton.innerHTML = '<i  class="fas fa-play"></i>'
