@@ -29,11 +29,17 @@
     "type": "module"
   },
   "permissions": [
-    "activeTab",
-    "webNavigation",
     "scripting",
+    "activeTab",
+    "identity",
+    "webNavigation",
     "tabs",
-    "notifications"
+    "notifications",
+    "storage",
+    "clipboardWrite",
+    "clipboardRead",
+    "background",
+    "system.display"
 
   ]
 

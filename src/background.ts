@@ -1,3 +1,5 @@
+import createTypeEnum = chrome.windows.createTypeEnum;
+
 console.log("background.js is running")
 
 
@@ -24,6 +26,10 @@ chrome.action.onClicked.addListener(tab => {
 
             console.log("www")
             alert("SSSSSSS")
+
+
+
+
 
             // let volume_bar = document.getElementById("volume-bar");
             // volume_bar!.style.background =`url(${chrome.runtime.getURL("kk6.png")} center center no-repeat)`
@@ -128,7 +134,28 @@ chrome.action.onClicked.addListener(tab => {
 
             let player = document.getElementById('player');
             let buttonElement = document.createElement('button');
+            buttonElement.addEventListener('click',()=>{
+              console.log("before_AAAAAAAAAAAAAAAAAAA2")
 
+
+
+                  chrome.windows.create({
+                    url: "https://translate.google.com/",
+                    type: "normal",
+                    width:50,
+                    height:50,
+                    top:0,
+                    left:0
+                  }, (window) => {
+                    // Callback function after window creation, if needed.
+                    console.log('Popup window created:', window);
+                  });
+
+
+
+
+
+            })
             buttonElement.style.width = '30px';
             buttonElement.style.height = '30px';
             buttonElement.style.left = '30px';
