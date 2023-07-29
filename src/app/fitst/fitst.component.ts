@@ -9,7 +9,12 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 export class FitstComponent implements OnInit,OnDestroy{
 
   text:string = "qwe"
-
+  // openGoogleTranslate() {
+  //   chrome.windows.create({ url: "https://translate.google.com/", type: "popup" }, (window) => {
+  //     // Callback function after window creation, if needed.
+  //     console.log('Popup window created:', window);
+  //   });
+  // }
 
 
 
@@ -44,6 +49,9 @@ export class FitstComponent implements OnInit,OnDestroy{
                 (document.getElementById('oframecdnplayer') as Node).appendChild(div)
 
               }
+
+
+
 
 
 

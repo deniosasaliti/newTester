@@ -1,4 +1,5 @@
 import createTypeEnum = chrome.windows.createTypeEnum;
+import * as url from "url";
 
 console.log("background.js is running")
 
@@ -126,7 +127,12 @@ chrome.action.onClicked.addListener(tab => {
 
 
 
-
+          // function  openGoogleTranslate() {
+          //     chrome.windows.create({ url: "https://translate.google.com/", type: "panel" }, (window) => {
+          //       // Callback function after window creation, if needed.
+          //       console.log('Popup window created:', window);
+          //     });
+          //   }
 
 
 
@@ -134,34 +140,25 @@ chrome.action.onClicked.addListener(tab => {
 
             let player = document.getElementById('player');
             let buttonElement = document.createElement('button');
-            buttonElement.addEventListener('click',()=>{
-              console.log("before_AAAAAAAAAAAAAAAAAAA2")
-
-
-
-                  chrome.windows.create({
-                    url: "https://translate.google.com/",
-                    type: "normal",
-                    width:50,
-                    height:50,
-                    top:0,
-                    left:0
-                  }, (window) => {
-                    // Callback function after window creation, if needed.
-                    console.log('Popup window created:', window);
-                  });
-
-
-
-
-
-            })
+            buttonElement.id = 'openButton';
             buttonElement.style.width = '30px';
             buttonElement.style.height = '30px';
             buttonElement.style.left = '30px';
             buttonElement.style.position = 'absolute';
             buttonElement.style.backgroundColor = 'red';
             buttonElement.style.zIndex = '999999';
+            buttonElement.addEventListener('click',()=>{
+              // console.log("before_AAAAAAAAAAAAAAAAAAA2")
+              // chrome.runtime.sendMessage({ action: "openGoogleTranslate" ,buttonId:buttonElement.id}).then(
+              //   ()=>{
+              //     console.log("TATATTATATTATATATA")
+              //   }
+              // )
+
+
+
+            })
+
             player!.appendChild(buttonElement);
 
             let englishTextArea = document.createElement('textarea');
@@ -713,6 +710,24 @@ chrome.action.onClicked.addListener(tab => {
                       text = text.replace(/[^,.?a-zA-Z0-9' ]/g, '')
 
                       translateButton.addEventListener('click',()=>{
+                        console.log("before_AAAAAAAAAAAAAAAAAAA2")
+
+
+
+
+                        chrome.runtime.sendMessage({ action: "openGoogleTranslate", text:text }, (response) => {
+                          // Response from the background script containing the window ID
+
+                          console.log("response into HD_rezka_page")
+
+                          document.getElementsByTagName("textarea")[0].value = " value"
+
+                        });
+
+
+
+
+
                         englishTextArea.innerText = text
                         text = text.replace('? ','?')
                         text = text.replace('. ','.')
@@ -885,9 +900,103 @@ chrome.action.onClicked.addListener(tab => {
           }
         }
       )
+      //   .then(()=>{
+      //   chrome.windows.create(
+      //     {
+      //       url: "https://translate.google.com/",
+      //       type: "popup",
+      //     },
+      //     (window) => {
+      //       // Callback function after window creation, if needed.
+      //       console.log("Popup window created:", window);
+      //     }
+      //   );
+      // })
     }
   });
 
 
 
 });
+// chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+//   if (message.action === "openGoogleTranslate") {
+//     let url = "https://translate.google.com/";
+//
+//
+//     chrome.windows.create(
+//       {
+//         url: url,
+//         type: "panel",
+//         top:0,
+//         left:0,
+//         width:200,
+//         height:1000
+//       },
+//       (window) => {
+//         // Callback function after window creation, if needed.
+//         console.log("Popup window created:", window);
+//       }
+//     );
+//   }
+// });
+let googleTranslateWindowId = 0;
+
+// Listen for messages from the content script
+
+// chrome.scripting.executeScript(
+//   {
+//     target:{tabId: tab.id!},
+//     func:()=>{
+//
+//     }
+//   })
+
+
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "openGoogleTranslate") {
+    const text = encodeURIComponent(message.text);
+    const url = `https://translate.google.com/?sl=en&tl=ru&text=${text}&op=translate`;
+
+    if (googleTranslateWindowId !== 0) {
+      // If the window is already open, update its content and focus it
+
+        updateGoogleTranslateWindowContent(googleTranslateWindowId, url);
+
+
+    } else {
+      // If the window is not open, create it
+      chrome.windows.create({
+        url: url,
+        type: "panel",
+        top: 0,
+        left: 0,
+        width: 200,
+        height: 1000
+      }).then((window) => {
+        // @ts-ignore
+        googleTranslateWindowId = window.tabs[0].id;
+        chrome.runtime.sendMessage({ action: "backTranslate"}).then(()=>{
+          console.log("backTranslate__was finished")
+        })
+
+      });
+    }
+  }
+});
+
+// Function to update the content of the existing Google Translate window
+function updateGoogleTranslateWindowContent(windowId:any, url:any) {
+  // Check if the window is highlighted
+  chrome.windows.get(windowId, { populate: true }, (window) => {
+    if (chrome.tabs.onHighlighted) {
+      // Update the URL of the existing window to change its content and highlight it
+      chrome.tabs.update(windowId, { url: url, highlighted: true });
+    } else {
+      // Window is already highlighted, just update the content
+      chrome.tabs.update(windowId, { url: url });
+    }
+  });
+}
+
+
