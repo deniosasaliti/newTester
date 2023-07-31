@@ -715,31 +715,14 @@ chrome.action.onClicked.addListener(tab => {
 
 
 
-                        chrome.runtime.sendMessage({ action: "checkStorage", text:text }, (response) => {
-                          let qweqweqwe:string = response+""
-                          console.log("RESSSSSSSSSSSSSSSS  AAA    " + qweqweqwe)
-                          if (response!=="yes"){
-                            console.log("INTO ________GAGAGAGA")
-                            chrome.runtime.sendMessage({ action: "openGoogleTranslate", text:text }, (response) => {
-                              // Response from the background script containing the window ID
+                        chrome.runtime.sendMessage({ action: "openGoogleTranslate", text:text }, (response) => {
+                          // Response from the background script containing the window ID
 
-                              console.log("response into HD_rezka_page")
-                              chrome.runtime.sendMessage({ action: "toGooglePage"});
-                              // document.getElementsByTagName("textarea")[0].value = " value"
+                          console.log("response into HD_rezka_page")
+                          chrome.runtime.sendMessage({ action: "toGooglePage"});
+                          // document.getElementsByTagName("textarea")[0].value = " value"
 
-                            });
-                          }else {
-                            chrome.runtime.sendMessage({ action: "reOpenGoogleTranslate", text:text }, (response) => {
-                              // Response from the background script containing the window ID
-
-                              console.log("response into HD_rezka_page --- ReOpen")
-                              chrome.runtime.sendMessage({ action: "toGooglePage"});
-                              // document.getElementsByTagName("textarea")[0].value = " value"
-
-                            });
-                          }
-
-                        })
+                        });
 
 
 
@@ -852,31 +835,14 @@ chrome.action.onClicked.addListener(tab => {
 
                     translateButton.addEventListener('click',()=>{
 
-                      chrome.runtime.sendMessage({ action: "checkStorage", text:text }, (response) => {
-                        let qweqweqwe:string = response+""
-                        console.log("RESSSSSSSSSSSSSSSS  AAA    " + qweqweqwe)
-                        if (response!=="yes"){
-                          console.log("INTO ________GAGAGAGA")
-                          chrome.runtime.sendMessage({ action: "openGoogleTranslate", text:text }, (response) => {
-                            // Response from the background script containing the window ID
+                      chrome.runtime.sendMessage({ action: "openGoogleTranslate", text:text }, (response) => {
+                        // Response from the background script containing the window ID
 
-                            console.log("response into HD_rezka_page")
-                            chrome.runtime.sendMessage({ action: "toGooglePage"});
-                            // document.getElementsByTagName("textarea")[0].value = " value"
+                        console.log("response into HD_rezka_page")
+                        chrome.runtime.sendMessage({ action: "toGooglePage"});
+                        // document.getElementsByTagName("textarea")[0].value = " value"
 
-                          });
-                        }else {
-                          chrome.runtime.sendMessage({ action: "reOpenGoogleTranslate", text:text }, (response) => {
-                            // Response from the background script containing the window ID
-
-                            console.log("response into HD_rezka_page --- ReOpen")
-                            chrome.runtime.sendMessage({ action: "toGooglePage"});
-                            // document.getElementsByTagName("textarea")[0].value = " value"
-
-                          });
-                        }
-
-                      })
+                      });
 
 
 
@@ -1013,41 +979,12 @@ chrome.action.onClicked.addListener(tab => {
 //
 //     }
 //   })
-let isOpen = false;
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-
-  if (message.action === "checkStorage") {
-    chrome.storage.local.get("isNew").then((data)=>{
-      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  "+ data["isNew"])
-      sendResponse(data["isNew"])
-    })
-
-  }
-})
 
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === "toBackgroundFromGoogle") {
-    const response = message.text
-      chrome.storage.local.get("isNew").then((data)=>{
-        if(data["isNew"]){
 
-        }
-      })
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-      if (message.action === "ReOpenGoogleTranslate") {
 
-          sendResponse(response);
-
-      }
-    })
-    // Send the response back to the content script
-    sendResponse(response);
-  }
-
-})
     let isLoaded = false;
-    let id:number;
+    let id:number = chrome.storage.local.get;
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "openGoogleTranslate") {
     const text = encodeURIComponent(message.text);
@@ -1070,12 +1007,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           //make sure the window's been fully loaded
           if ( changeInfo.status == 'complete') {
             console.log("loaded!!!!!!!");
-            //send text to a newly created window
+            // @ts-ignore
+            let id:number = data.tabs[0].id as number;
+            chrome.storage.local.set({'id': id}).then(() => {
+              console.log("id " + id+ " was saved");
+            });
 
-            // @ts-ignore
-            id = data.tabs[0].id as number
-            // @ts-ignore
-            chrome.tabs.sendMessage(data.tabs[0].id as number, {action: "toBackgroundFromGoogle",load:"load"});
+            chrome.tabs.sendMessage(id, {action: "toBackgroundFromGoogle",load:"load"});
           }
         });
 
@@ -1084,7 +1022,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }else {
       try {
 
-          chrome.tabs.sendMessage(id, {action: "toBackgroundFromGoogle",load:"reload"});
+          chrome.tabs.sendMessage(id, {action: "toBackgroundFromGoogle",load:"reload",text:message.text});
+
 
 
       } catch (error) {

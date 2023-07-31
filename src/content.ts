@@ -1,5 +1,5 @@
 
-alert('Hello world from content.js');
+
 
 
 
@@ -11,7 +11,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       // Process the message and prepare the response data
 
       if (message.load ==="reload"){
-        document.getElementsByTagName("textarea")[0].value = "value";
+       let textArea = document.getElementsByTagName("textarea")[0]
+        textArea.value = message.text;
+        textArea.dispatchEvent(new Event('input', {bubbles:true}));
       }
       const response = "This is the response from the background script.";
       console.log("toBackgroundFromGoogle"+ message.load)

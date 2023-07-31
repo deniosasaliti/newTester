@@ -13,8 +13,7 @@
 
       ],
       "js": [
-        "assets/all.js",
-        "content.ts"
+        "assets/all.js"
       ]
     },
     {
