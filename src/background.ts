@@ -984,7 +984,7 @@ chrome.action.onClicked.addListener(tab => {
 
 
     let isLoaded = false;
-    let id:number = chrome.storage.local.get;
+    // let id:number = chrome.storage.local.get;
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "openGoogleTranslate") {
     const text = encodeURIComponent(message.text);
