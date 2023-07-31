@@ -929,125 +929,95 @@ chrome.action.onClicked.addListener(tab => {
           }
         }
       )
-      //   .then(()=>{
-      //   chrome.windows.create(
-      //     {
-      //       url: "https://translate.google.com/",
-      //       type: "popup",
-      //     },
-      //     (window) => {
-      //       // Callback function after window creation, if needed.
-      //       console.log("Popup window created:", window);
-      //     }
-      //   );
-      // })
+
     }
   });
 
 
 
 });
-// chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-//   if (message.action === "openGoogleTranslate") {
-//     let url = "https://translate.google.com/";
-//
-//
-//     chrome.windows.create(
-//       {
-//         url: url,
-//         type: "panel",
-//         top:0,
-//         left:0,
-//         width:200,
-//         height:1000
-//       },
-//       (window) => {
-//         // Callback function after window creation, if needed.
-//         console.log("Popup window created:", window);
-//       }
-//     );
-//   }
-// });
-// let googleTranslateWindowId = 0;
-
-// Listen for messages from the content script
-
-// chrome.scripting.executeScript(
-//   {
-//     target:{tabId: tab.id!},
-//     func:()=>{
-//
-//     }
-//   })
 
 
 
 
-    let isLoaded = false;
-    // let id:number = chrome.storage.local.get;
+
+
+chrome.windows.onRemoved.addListener((windowId) => {
+  chrome.storage.local.get(["wId","tId"], function (result) {
+    if (windowId ==result["wId"]){
+      chrome.storage.local.clear().then(()=>{
+        console.log("local storage was cleared")
+      });
+    }
+  })
+
+});
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "openGoogleTranslate") {
     const text = encodeURIComponent(message.text);
     const url = `https://translate.google.com/?sl=en&tl=ru&text=${text}&op=translate`;
-
-    if (!isLoaded) {
-
-      // If the window is not open, create it
-      chrome.windows.create({
-        url: url,
-        type: "panel",
-        top: 0,
-        left: 0,
-        width: 200,
-        height: 1000
-      },(data)=>{
-        //add on update listener to a newly created window
-        chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-          isLoaded = true;
-          //make sure the window's been fully loaded
-          if ( changeInfo.status == 'complete') {
-            console.log("loaded!!!!!!!");
-            // @ts-ignore
-            let id:number = data.tabs[0].id as number;
-            chrome.storage.local.set({'id': id}).then(() => {
-              console.log("id " + id+ " was saved");
-            });
-
-            chrome.tabs.sendMessage(id, {action: "toBackgroundFromGoogle",load:"load"});
-          }
-        });
-
-
-      })
-    }else {
-      try {
-
-          chrome.tabs.sendMessage(id, {action: "toBackgroundFromGoogle",load:"reload",text:message.text});
+  chrome.storage.local.get(["wId","tId"], function (result) {
 
 
 
-      } catch (error) {
-        console.error("Error sending message to background script:", error);
+      console.log(result);//could !!false or not
+
+
+      if (result["wId"]!=undefined && result["tId"]!=undefined) {
+
+        chrome.tabs.sendMessage(result["tId"], {action: "toBackgroundFromGoogle", load: "reload", text: message.text});
+
+          console.log("tabId was loaded  " + result["tId"])
+          console.log("windowId was loaded  " + result["wId"])
+          chrome.windows.update(result["wId"],{focused:true}).then(()=>{
+            console.log("window with id " + result["wId"]  + "  was updated" )
+          })
+
+
+
       }
 
-    }
 
 
-  }
-});
+      else {
+        //create window
+        chrome.windows.create({
+          url: url,
+          type: "panel",
+          top: 0,
+          left: 0,
+          width: 200,
+          height: 1000
+        }, (data) => {
 
-// Function to update the content of the existing Google Translate window
-// function updateGoogleTranslateWindowContent(windowId:any, url:any) {
-//   // Check if the window is highlighted
-//   chrome.windows.get(windowId, { populate: true }, (window) => {
-//     if (chrome.tabs.onHighlighted) {
-//       // Update the URL of the existing window to change its content and highlight it
-//       chrome.tabs.update(windowId, { url: url, highlighted: true });
-//     } else {
-//       // Window is already highlighted, just update the content
-//       chrome.tabs.update(windowId, { url: url });
-//     }
-//   });
-// }
+          chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+
+
+            //make sure the window's been fully loaded
+            if (changeInfo.status == 'complete') {
+              console.log("loaded!!!!!!!");
+              // @ts-ignore
+              let wId: number = data?.id;
+              // @ts-ignore
+              let tId: number = data?.tabs[0].id
+              // @ts-ignore
+              chrome.storage.local.set({'tId': tId,'wId':wId}).then(() => {
+                console.log("tId " + tId + " was saved");
+                console.log("wId " + wId + " was saved");
+              });
+
+
+              chrome.tabs.sendMessage(tId, {action: "toBackgroundFromGoogle", load: "load"});
+            }
+          });
+
+
+        })
+
+      }
+
+  });
+}
+})
 
 
